@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rail Pravaah - AI Railway Intelligence</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #1a237e;
+            --accent-teal: #00bcd4;
+            --dark-bg: #0a0a2a;
+            --card-bg: #ffffff;
+            --text-dark: #333;
+            --text-light: #fff;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--primary-blue) 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-teal);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-teal);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-teal);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 188, 212, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(26, 35, 126, 0.1) 0%, transparent 50%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--accent-teal), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px var(--accent-teal); }
+            to { text-shadow: 0 0 30px var(--accent-teal), 0 0 40px var(--accent-teal); }
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, var(--accent-teal), #00e5ff);
+            color: var(--dark-bg);
+            padding: 1.2rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 188, 212, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 188, 212, 0.4);
+        }
+
+        /* Section Styling */
+        .section {
+            padding: 6rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%; /* Add this line */
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            color: var(--accent-teal);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent-teal);
+            border-radius: 2px;
+        }
+
+        /* Problem Section */
+        .problem-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin: 1rem auto;
+            backdrop-filter: blur(10px);
+            max-width: 1200px;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+            justify-items: center; /* Add this line */
+        }
+
+        .card {
+            background: var(--card-bg);
+            color: var(--text-dark);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            width: 100%; /* Add this line */
+            max-width: 400px; /* Add this line */
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(45deg, var(--accent-teal), var(--primary-blue));
+        }
+
+        .card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h3 {
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-teal);
+        }
+
+        .card p {
+            line-height: 1.8;
+            color: #666;
+        }
+
+        /* Story Demo Section */
+        .story-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .progress-bar {
+            display: flex;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .progress-step.active {
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .progress-step::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .progress-step:first-child::before {
+            width: 50%;
+            left: 50%;
+        }
+
+        .progress-step:last-child::before {
+            width: 50%;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            line-height: 30px;
+            margin-right: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .progress-step.active .step-number {
+            background: white;
+            color: var(--primary-blue);
+        }
+
+        .story-cards {
+            position: relative;
+            min-height: 600px;
+        }
+
+        .story-card {
+            display: none;
+            padding: 3rem;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateX(50px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0) scale(1); 
+            }
+        }
+
+        .story-card.active {
+            display: block;
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .card-header h3 {
+            font-size: 2rem;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Scenario Visual */
+        .scenario-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .junction {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 1.5rem 3rem;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .trains-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .train {
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s;
+            min-width: 200px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .train::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .train:hover::before {
+            left: 100%;
+        }
+
+        .train.medical { 
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.3);
+        }
+        .train.vande-bharat { 
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3);
+        }
+        .train.goods { 
+            background: linear-gradient(135deg, #6c757d, #545b62);
+            box-shadow: 0 10px 30px rgba(108, 117, 125, 0.3);
+        }
+        .train.local { 
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+        }
+
+        .train:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .train-passengers {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        /* AI Processing */
+        .ai-processing {
+            margin-bottom: 3rem;
+        }
+
+        .processing-item {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid var(--accent-teal);
+            transition: all 0.3s;
+        }
+
+        .processing-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .processing-item .icon {
+            font-size: 2rem;
+            margin-right: 1.5rem;
+            color: var(--accent-teal);
+        }
+
+        .processing-item .text {
+            flex: 1;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .status {
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+        }
+
+        .status.completed {
+            background: var(--success);
+            color: white;
+        }
+
+        .timer {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        .time {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Weighting System */
+        .weighting-system {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .weight-category {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+
+        .weight-category:hover {
+            border-color: var(--accent-teal);
+            transform: translateY(-5px);
+        }
+
+        .weight-category h4 {
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.3rem;
+        }
+
+        .weight-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .weight-item span {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .weight-item:last-child {
+            border-bottom: none;
+        }
+
+        .weight-value {
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            color: white;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .weight-value.critical { background: linear-gradient(135deg, #dc3545, #c82333); }
+        .weight-value.high { background: linear-gradient(135deg, #fd7e14, #e55a00); }
+        .weight-value.medium { background: linear-gradient(135deg, #ffc107, #e6a800); color: black; }
+        .weight-value.low { background: linear-gradient(135deg, #28a745, #1e7e34); }
+
+        /* Digital Twin Validation */
+        .validation-process {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .simulation-scene {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .virtual-track {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .train-sim {
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            animation: moveTrain 3s ease-in-out infinite;
+        }
+
+        .train-sim.medical { background: #dc3545; }
+        .train-sim.vande-bharat { background: #007bff; }
+        .train-sim.local-1 { background: #28a745; }
+        .train-sim.local-2 { background: #28a745; }
+        .train-sim.goods { background: #6c757d; }
+
+        @keyframes moveTrain {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(50px); }
+        }
+
+        .validation-results {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .result-item {
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .result-item.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 5px solid #28a745;
+        }
+
+        /* Controller Dashboard */
+        .dashboard {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .ai-recommendation {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--accent-teal);
+        }
+
+        .recommendation-text {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .reasoning {
+            background: #e3f2fd;
+            padding: 1.5rem;
+            border-radius: 10px;
+            color: black
+        }
+
+        .reasoning ul {
+            margin-top: 0.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .reasoning li {
+            margin-bottom: 0.5rem;
+        }
+
+        .controller-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-accept, .btn-reject {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .btn-accept {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+        }
+
+        .btn-reject {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+        }
+
+        .btn-accept:hover, .btn-reject:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Learning Process */
+        .learning-process {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+
+        .learning-scenario {
+            text-align: center;
+        }
+
+        .learning-scenario p {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+        }
+
+        .neural-network {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .layer {
+            padding: 1rem 2rem;
+            background: var(--accent-teal);
+            color: white;
+            border-radius: 10px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .layer::after {
+            content: '→';
+            position: absolute;
+            right: -1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-teal);
+            font-size: 1.5rem;
+        }
+
+        .layer:last-child::after {
+            display: none;
+        }
+
+        .learning-text {
+            font-style: italic;
+            margin: 1rem 0;
+            color: #666;
+        }
+
+        .learning-result {
+            background: #e8f5e8;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 5px solid #28a745;
+            margin-top: 1rem;
+        }
+
+        /* Final Result */
+        .final-result {
+            text-align: center;
+        }
+
+        .result-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .metric {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+        }
+
+        .metric .number {
+            font-size: 3rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .metric .label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .automation-ready {
+            background: #fff3cd;
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 5px solid #ffc107;
+            margin-top: 2rem;
+        }
+
+        .automation-ready h4 {
+            color: #856404;
+            margin-bottom: 1rem;
+        }
+
+        /* Navigation Buttons */
+        .card-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .nav-btn {
+            background: var(--accent-teal);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn:hover {
+            background: #0097a7;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .nav-btn.prev {
+            background: #6c757d;
+        }
+
+        .nav-btn.prev:hover {
+            background: #545b62;
+        }
+
+        /* Impact Section */
+        .impact-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin: 1rem auto;
+            backdrop-filter: blur(10px);
+            max-width: 1200px;
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            text-align: center;
+            justify-items: center; /* Add this line */
+            max-width: 1000px; /* Add this line */
+            margin: 0 auto; /* Add this line */
+        }
+
+        .impact-item {
+            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%; /* Add this line */
+            max-width: 280px; /* Add this line */
+        }
+
+        .impact-item:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-teal);
+        }
+
+        .impact-number {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--accent-teal);
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .impact-label {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-teal);
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .section { padding: 4rem 1rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .progress-bar { flex-direction: column; gap: 1rem; }
+            .progress-step::before { display: none; }
+            .weighting-system { grid-template-columns: 1fr; }
+            .trains-container { flex-direction: column; }
+            .validation-process { grid-template-columns: 1fr; }
+            .controller-actions { flex-direction: column; }
+            .neural-network { flex-direction: column; gap: 1rem; }
+            .layer::after { 
+                right: 50%;
+                top: auto;
+                bottom: -1.5rem;
+                transform: translateX(50%) rotate(90deg);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-teal);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00a5bb;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                <i class="fas fa-train"></i>
+                Rail Pravaah
+            </div>
+            <div class="nav-links">
+                <a href="#problem">The Challenge</a>
+                <a href="#solution">Our Solution</a>
+                <a href="#demo">Live Demo</a>
+                <a href="#impact">Impact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>Rail Pravaah</h1>
+            <p>Revolutionizing Indian Railways with Artificial Intelligence</p>
+            <p>Where Human Expertise Meets AI Intelligence for Smarter, Safer, and More Efficient Railway Operations</p>
+            <button class="cta-button" onclick="scrollToDemo()">
+                <i class="fas fa-play"></i>
+                See Live Demo
+            </button>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section id="problem" class="section problem-section">
+        <h2 class="section-title">The Railway Challenge</h2>
+        <div class="cards-grid">
+            <div class="card">
+                <!-- <div class="card-icon">⏰</div> -->
+                <h3><i class="fas fa-clock"></i> Chronic Delays</h3>
+                <p>With an average delay of 31 minutes per train, millions of passengers face daily inconveniences, affecting productivity and trust in railway services.</p>
+            </div>
+            <div class="card">
+                <!-- <div class="card-icon">💰</div> -->
+                <h3><i class="fas fa-gas-pump"></i> Fuel Inefficiency</h3>
+                <p>₹1,350 crores monthly fuel expenditure with significant wastage due to suboptimal routing, idling trains, and inefficient scheduling.</p>
+            </div>
+            <div class="card">
+                <!-- <div class="card-icon">🚧</div> -->
+                <h3><i class="fas fa-brain"></i> Cognitive Overload</h3>
+                <p>Human controllers juggle 100+ variables simultaneously - an impossible task leading to suboptimal decisions and safety concerns.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section id="solution" class="section">
+        <h2 class="section-title">Our AI-Powered Solution</h2>
+        <div class="cards-grid">
+            <div class="card">
+                <!-- <div class="card-icon">⚡</div> -->
+                <h3><i class="fas fa-bolt"></i> Lightning Fast Decisions</h3>
+                <p>Processes 100+ trains, 500+ scenarios, and 247 safety protocols in just 5 seconds - 90% faster than manual decisions.</p>
+            </div>
+            <div class="card">
+                <!-- <div class="card-icon">🎯</div> -->
+                <h3><i class="fas fa-crosshairs"></i> Triple-Weight Intelligence</h3>
+                <p>Smart scoring system for Stations, Tracks, and Trains enables optimal prioritization based on real-time conditions.</p>
+            </div>
+            <div class="card">
+                <!-- <div class="card-icon">📚</div> -->
+                <h3><i class="fas fa-graduation-cap"></i> Self-Learning AI</h3>
+                <p>Continuously learns from controller decisions and adapts to local operational wisdom, becoming smarter with every interaction.</p>
+            </div>
+            <div class="card">
+                <!-- <div class="card-icon">🔄</div> -->
+                <h3><i class="fas fa-sync-alt"></i> Digital Twin Validation</h3>
+                <p>Tests every decision in a virtual environment before implementation, ensuring safety and optimal outcomes.</p>
+            </div>
+            <div class="card">
+                <!-- <div class="card-icon">🚨</div> -->
+                <h3><i class="fas fa-robot"></i> Emergency Automation</h3>
+                <p>Full autonomous control during critical situations when every second counts, while maintaining all safety standards.</p>
+            </div>
+            <div class="card">
+                <!-- <div class="card-icon">👥</div> -->
+                <h3><i class="fas fa-users"></i> Human-in-the-Loop</h3>
+                <p>Empowers controllers with AI assistance while keeping final decision authority in human hands.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Demo Section -->
+    <section id="demo" class="section">
+        <h2 class="section-title">Live AI Demonstration</h2>
+        <div class="story-container">
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="progress-step active" onclick="showCard(1)">
+                    <span class="step-number">1</span>
+                    Scenario
+                </div>
+                <div class="progress-step" onclick="showCard(2)">
+                    <span class="step-number">2</span>
+                    AI Analysis
+                </div>
+                <div class="progress-step" onclick="showCard(3)">
+                    <span class="step-number">3</span>
+                    Weighting
+                </div>
+                <div class="progress-step" onclick="showCard(4)">
+                    <span class="step-number">4</span>
+                    Validation
+                </div>
+                <div class="progress-step" onclick="showCard(5)">
+                    <span class="step-number">5</span>
+                    Controller
+                </div>
+                <div class="progress-step" onclick="showCard(6)">
+                    <span class="step-number">6</span>
+                    Learning
+                </div>
+            </div>
+
+            <!-- Story Cards -->
+            <div class="story-cards">
+                <!-- Card 1: Scenario -->
+                <div class="story-card active" id="card-1">
+                    <div class="card-header">
+                        <h3>🚨 Emergency Scenario Detected</h3>
+                        <p>5 trains approaching the same junction simultaneously</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="scenario-visual">
+                            <div class="junction">JUNCTION X - CRITICAL CONGESTION</div>
+                            <div class="trains-container">
+                                <div class="train medical">
+                                    🚑 MEDICAL EXPRESS
+                                    <div class="train-passengers">Emergency Supplies</div>
+                                </div>
+                                <div class="train vande-bharat">
+                                    🚄 VANDE BHARAT
+                                    <div class="train-passengers">500 Passengers</div>
+                                </div>
+                                <div class="train local">
+                                    🚆 LOCAL TRAIN 1
+                                    <div class="train-passengers">300 Passengers</div>
+                                </div>
+                                <div class="train local">
+                                    🚆 LOCAL TRAIN 2
+                                    <div class="train-passengers">350 Passengers</div>
+                                </div>
+                                <div class="train goods">
+                                    🚛 GOODS TRAIN
+                                    <div class="train-passengers">Essential Goods</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="scenario-details">
+                            <p><strong>Critical Situation:</strong> All trains need immediate clearance, but junction capacity is limited. Manual decision would take 2-5 minutes with risk of errors.</p>
+                        </div>
+                    </div>
+                    <div class="card-navigation">
+                        <button class="nav-btn prev" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                            Previous
+                        </button>
+                        <button class="nav-btn next" onclick="showCard(2)">
+                            AI Analysis
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2: AI Analysis -->
+                <div class="story-card" id="card-2">
+                    <div class="card-header">
+                        <h3>🧠 AI Super Brain Activation</h3>
+                        <p>Processing complex variables in seconds</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="ai-processing">
+                            <div class="processing-item">
+                                <div class="icon">🔍</div>
+                                <div class="text">Graph Neural Network analyzing 100+ trains in network topology</div>
+                                <div class="status completed">Completed</div>
+                            </div>
+                            <div class="processing-item">
+                                <div class="icon">🔄</div>
+                                <div class="text">Reinforcement Learning evaluating 500+ possible routing scenarios</div>
+                                <div class="status completed">Completed</div>
+                            </div>
+                            <div class="processing-item">
+                                <div class="icon">⚡</div>
+                                <div class="text">Real-time data integration from GPS, sensors, and weather systems</div>
+                                <div class="status completed">Completed</div>
+                            </div>
+                            <div class="processing-item">
+                                <div class="icon">🛡️</div>
+                                <div class="text">247 safety protocols verification and compliance checking</div>
+                                <div class="status completed">Completed</div>
+                            </div>
+                        </div>
+                        <div class="timer">
+                            <strong>Total Processing Time: <span class="time">2.3 seconds</span></strong>
+                            <p>(Compared to 2-5 minutes for manual analysis)</p>
+                        </div>
+                    </div>
+                    <div class="card-navigation">
+                        <button class="nav-btn prev" onclick="showCard(1)">
+                            <i class="fas fa-chevron-left"></i>
+                            Previous
+                        </button>
+                        <button class="nav-btn next" onclick="showCard(3)">
+                            Weighting System
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 3: Triple Weighting -->
+                <div class="story-card" id="card-3">
+                    <div class="card-header">
+                        <h3>⚖️ Triple-Weight Intelligence System</h3>
+                        <p>Smart prioritization based on multiple factors</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="weighting-system">
+                            <div class="weight-category">
+                                <h4>🚉 Station Weights</h4>
+                                <div class="weight-item">
+                                    <span>Junction Occupancy:</span>
+                                    <span class="weight-value high">85%</span>
+                                </div>
+                                <div class="weight-item">
+                                    <span>Platform Availability:</span>
+                                    <span class="weight-value medium">2/5</span>
+                                </div>
+                                <div class="weight-item">
+                                    <span>Maintenance Status:</span>
+                                    <span class="weight-value low">Normal</span>
+                                </div>
+                            </div>
+                            
+                            <div class="weight-category">
+                                <h4>🛤️ Track Weights</h4>
+                                <div class="weight-item">
+                                    <span>Main Line Congestion:</span>
+                                    <span class="weight-value high">90%</span>
+                                </div>
+                                <div class="weight-item">
+                                    <span>Alternative Route:</span>
+                                    <span class="weight-value low">30%</span>
+                                </div>
+                                <div class="weight-item">
+                                    <span>Speed Restrictions:</span>
+                                    <span class="weight-value medium">Yes</span>
+                                </div>
+                            </div>
+                            
+                            <div class="weight-category">
+                                <h4>🚂 Train Weights</h4>
+                                <div class="weight-item">
+                                    <span>Medical Express:</span>
+                                    <span class="weight-value critical">95%</span>
+                                </div>
+                                <div class="weight-item">
+                                    <span>Vande Bharat:</span>
+                                    <span class="weight-value high">85%</span>
+                                </div>
+                                <div class="weight-item">
+                                    <span>Local Trains:</span>
+                                    <span class="weight-value medium">65%</span>
+                                </div>
+                                <div class="weight-item">
+                                    <span>Goods Train:</span>
+                                    <span class="weight-value low">40%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weighting-explanation">
+                            <p><strong>AI Conclusion:</strong> Medical Express gets maximum priority due to emergency nature, followed by Vande Bharat for passenger impact.</p>
+                        </div>
+                    </div>
+                    <div class="card-navigation">
+                        <button class="nav-btn prev" onclick="showCard(2)">
+                            <i class="fas fa-chevron-left"></i>
+                            Previous
+                        </button>
+                        <button class="nav-btn next" onclick="showCard(4)">
+                            Digital Validation
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 4: Digital Twin Validation -->
+                <div class="story-card" id="card-4">
+                    <div class="card-header">
+                        <h3>🔍 Digital Twin Validation</h3>
+                        <p>Testing decisions in virtual environment</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="validation-process">
+                            <div class="simulation-scene">
+                                <h4>Virtual Railway Simulation</h4>
+                                <div class="virtual-track">
+                                    <div class="train-sim medical">🚑 MEDICAL</div>
+                                    <div class="train-sim vande-bharat">🚄 VANDE BHARAT</div>
+                                    <div class="train-sim local-1">🚆 LOCAL 1</div>
+                                    <div class="train-sim local-2">🚆 LOCAL 2</div>
+                                    <div class="train-sim goods">🚛 GOODS</div>
+                                </div>
+                                <p style="margin-top: 1rem; text-align: center; color: #666;">
+                                    Simulating AI recommendation in digital twin...
+                                </p>
+                            </div>
+                            <div class="validation-results">
+                                <h4>Validation Results</h4>
+                                <div class="result-item success">
+                                    ✅ No collisions detected
+                                </div>
+                                <div class="result-item success">
+                                    ✅ All safety protocols passed
+                                </div>
+                                <div class="result-item success">
+                                    ✅ Estimated delay reduction: 45 minutes
+                                </div>
+                                <div class="result-item success">
+                                    ✅ Passenger impact: 200 hours saved
+                                </div>
+                                <div class="result-item success">
+                                    ✅ Fuel savings: ₹25,000 estimated
+                                </div>
+                            </div>
+                        </div>
+                        <div class="validation-summary">
+                            <p><strong>Digital Twin Verification:</strong> AI recommendation successfully validated. All safety checks passed with significant positive impact.</p>
+                        </div>
+                    </div>
+                    <div class="card-navigation">
+                        <button class="nav-btn prev" onclick="showCard(3)">
+                            <i class="fas fa-chevron-left"></i>
+                            Previous
+                        </button>
+                        <button class="nav-btn next" onclick="showCard(5)">
+                            Controller Dashboard
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 5: Human-in-the-Loop -->
+                <div class="story-card" id="card-5">
+                    <div class="card-header">
+                        <h3>👥 Controller Dashboard</h3>
+                        <p>Human-AI collaboration in action</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="dashboard">
+                            <div class="ai-recommendation">
+                                <h4>🤖 AI Recommendation</h4>
+                                <p class="recommendation-text">
+                                    "Prioritize Medical Express → Vande Bharat → Local Trains → Goods Train"
+                                </p>
+                                <div class="reasoning">
+                                    <strong>AI Reasoning:</strong>
+                                    <ul>
+                                        <li>Medical Express carries life-saving supplies - MAX PRIORITY</li>
+                                        <li>Vande Bharat has 500 passengers - HIGH PRIORITY</li>
+                                        <li>Local trains can be slightly delayed - MEDIUM PRIORITY</li>
+                                        <li>Goods train can wait 25 mins - LOW PRIORITY</li>
+                                    </ul>
+                                    <p><strong>Expected Impact:</strong> 200 passenger-hours saved, 45 minutes delay reduction</p>
+                                </div>
+                            </div>
+                            <div class="controller-actions">
+                                <button class="btn-accept" onclick="controllerAction('accept')">
+                                    <i class="fas fa-check"></i>
+                                    Accept AI Decision
+                                </button>
+                                <button class="btn-reject" onclick="controllerAction('reject')">
+                                    <i class="fas fa-times"></i>
+                                    Reject & Choose Manually
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-navigation">
+                        <button class="nav-btn prev" onclick="showCard(4)">
+                            <i class="fas fa-chevron-left"></i>
+                            Previous
+                        </button>
+                        <button class="nav-btn next" onclick="showCard(6)">
+                            Learning Process
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 6: Self-Learning -->
+                <div class="story-card" id="card-6">
+                    <div class="card-header">
+                        <h3>📚 Self-Learning in Action</h3>
+                        <p>AI adapts and improves continuously</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="learning-process">
+                            <div class="learning-scenario">
+                                <p class="ls"><strong>Learning Scenario:</strong> Controller rejected AI suggestion and prioritized Local Train first during peak hours</p>
+                                
+                                <div class="neural-network">
+                                    <div class="layer">Input Layer</div>
+                                    <div class="layer">Hidden Layer</div>
+                                    <div class="layer">Output Layer</div>
+                                </div>
+                                
+                                <div class="learning-text">
+                                    AI analyzing controller's decision pattern and learning local operational preferences...
+                                </div>
+                                
+                                <div class="learning-result">
+                                    <p><strong>AI Learned:</strong> "During peak hours, this controller prefers to prioritize local commuters over express trains"</p>
+                                    <p>→ Will adjust future recommendations for similar scenarios</p>
+                                    <p>→ Updated weight calculations for local trains during rush hours</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="final-metrics" style="text-align: center; margin-top: 2rem; padding: 2rem; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 15px;">
+                            <h4>🎯 Final Performance Metrics</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                                <div>
+                                    <div style="font-size: 2rem; font-weight: bold;">5</div>
+                                    <div>Seconds Total</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 2rem; font-weight: bold;">247</div>
+                                    <div>Safety Checks</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 2rem; font-weight: bold;">200</div>
+                                    <div>Hours Saved</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 2rem; font-weight: bold;">100%</div>
+                                    <div>Safe</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-navigation">
+                        <button class="nav-btn prev" onclick="showCard(5)">
+                            <i class="fas fa-chevron-left"></i>
+                            Previous
+                        </button>
+                        <button class="nav-btn next" onclick="showCard(1)">
+                            <i class="fas fa-redo"></i>
+                            Restart Demo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section id="impact" class="section impact-section">
+        <h2 class="section-title">Measurable Impact</h2>
+        <div class="impact-grid">
+            <div class="impact-item">
+                <span class="impact-number" data-target="19">0</span>
+                <div class="impact-label">Delay Reduction</div>
+                <p>31min → 25min average</p>
+            </div>
+            <div class="impact-item">
+                <span class="impact-number" data-target="15">0</span>
+                <div class="impact-label">Fuel Savings</div>
+                <p>₹1350Cr → ₹1215Cr monthly</p>
+            </div>
+            <div class="impact-item">
+                <span class="impact-number" data-target="16">0</span>
+                <div class="impact-label">Throughput Increase</div>
+                <p>25 → 29 trains/section/day</p>
+            </div>
+            <div class="impact-item">
+                <span class="impact-number" data-target="96">0</span>
+                <div class="impact-label">Faster Decisions</div>
+                <p>2min → 5sec average</p>
+            </div>
+            <div class="impact-item">
+                <span class="impact-number" data-target="40">0</span>
+                <div class="impact-label">Controllers Workload Decrement</div>
+                <p>Per critical decision scenario</p>
+            </div>
+            <div class="impact-item">
+                <span class="impact-number" data-target="60">0</span>
+                <div class="impact-label">Safety Compliance</div>
+                <p>247 protocols, 100% adherence</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-train"></i>
+                Rail Pravaah
+            </div>
+            <p>Revolutionizing Indian Railways with Artificial Intelligence</p>
+            <p>SIH 2025 Submission | AI-Powered Railway Traffic Management System</p>
+            <p style="margin-top: 2rem; opacity: 0.7;">&copy; 2025 Rail Pravaah. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        function scrollToDemo() {
+            document.getElementById('demo').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Story navigation
+        let currentCard = 1;
+        const totalCards = 6;
+
+        function showCard(cardNumber) {
+            // Hide current card
+            document.getElementById(`card-${currentCard}`).classList.remove('active');
+            
+            // Update progress bar
+            document.querySelectorAll('.progress-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            document.querySelector(`.progress-step:nth-child(${cardNumber})`).classList.add('active');
+            
+            // Show new card
+            document.getElementById(`card-${cardNumber}`).classList.add('active');
+            currentCard = cardNumber;
+
+            // Update navigation buttons
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.querySelector('.nav-btn.prev');
+            const nextBtn = document.querySelector('.nav-btn.next');
+            
+            prevBtn.disabled = currentCard === 1;
+            
+            if (currentCard === totalCards) {
+                nextBtn.innerHTML = '<i class="fas fa-redo"></i> Restart Demo';
+                nextBtn.onclick = () => showCard(1);
+            } else {
+                nextBtn.innerHTML = `Next <i class="fas fa-chevron-right"></i>`;
+                nextBtn.onclick = () => showCard(currentCard + 1);
+            }
+        }
+
+        function controllerAction(action) {
+            if (action === 'accept') {
+                alert('✅ Controller accepted AI recommendation!\nDecision implemented successfully.\n200 passenger-hours saved!');
+            } else {
+                alert('🔄 Controller chose manual decision.\nAI will learn from this choice and adapt future recommendations.');
+            }
+        }
+
+        // Animated counters
+        function startCounters() {
+            const counters = document.querySelectorAll('.impact-number');
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const increment = target / 100;
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current);
+                    }
+                }, 20);
+            });
+        }
+
+        // Intersection Observer for counters
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    startCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(document.getElementById('impact'));
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateNavigation();
+            
+            // Add scroll animations
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-15px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+
+        // Add some interactive effects to trains
+        document.querySelectorAll('.train').forEach(train => {
+            train.addEventListener('click', function() {
+                this.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>
